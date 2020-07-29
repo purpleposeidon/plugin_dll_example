@@ -23,7 +23,7 @@ static PATH: &str = "./libtemplate.so";
 #[cfg(windows)]
 static PATH: &str = "./template.dll";
 
-pub fn xp_main() {
+pub fn plugin_dll_example_main() {
     let mut me = std::env::current_exe()
         .expect("whoami?");
     me.pop();

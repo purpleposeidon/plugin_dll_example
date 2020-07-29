@@ -34,6 +34,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "plugin_dll_example_crate"
+version = "0.1.0"
+dependencies = [
+ "libloading",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "proc-macro2"
 version = "1.0.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -103,8 +112,8 @@ dependencies = [
 name = "template"
 version = "0.1.0"
 dependencies = [
+ "plugin_dll_example_crate",
  "serde",
- "xp_crate",
 ]
 
 [[package]]
@@ -124,12 +133,3 @@ name = "winapi-build"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2d315eee3b34aca4797b2da6b13ed88266e6d612562a0c46390af8299fc699bc"
-
-[[package]]
-name = "xp_crate"
-version = "0.1.0"
-dependencies = [
- "libloading",
- "serde",
- "serde_json",
-]

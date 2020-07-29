@@ -1,6 +1,5 @@
-# http://doc.crates.io/manifest.html
 [package]
-name = "xp_crate"
+name = "plugin_dll_example_crate"
 version = "0.1.0"
 authors = ["neptunepink <purpleposeidon@gmail.com>"]
 publish = false
@@ -13,14 +12,14 @@ members = ["src/template/"]
 #crate-type = ["dylib"]
 #crate-type = ["rlib", "dylib", "cdylib"]
 crate-type = ["rlib", "cdylib"]
-name = "xp_lib"
+name = "plugin_dll_example_lib"
 
 #[profile.dev]
 #lto = true
 
 [[bin]]
-name = "xp_bin"
-path = "src/bin/xp_bin.rs"
+name = "plugin_dll_example_bin"
+path = "src/bin/plugin_dll_example_bin.rs"
 doc = false
 
 

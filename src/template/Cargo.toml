@@ -8,5 +8,5 @@ crate-type = ["cdylib"]
 path = "template.rs"
 
 [dependencies]
-xp_crate = { path = "../../" }
+plugin_dll_example_crate = { path = "../../" }
 serde = { version = "1", features = ["derive"] }
