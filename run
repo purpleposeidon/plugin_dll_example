@@ -1,0 +1,63 @@
+#!/bin/bash
+
+unset RUSTC_WRAPPER
+set -e
+
+MSVC="/media/media/source/msvc/Program Files"
+each_lib() {
+    add_lib_path "$MSVC/Microsoft Visual Studio 14.0/VC/lib/amd64"
+    add_lib_path "$MSVC/Windows Kits/10/Lib/10.0.15063.0/ucrt/x64/"
+    add_lib_path "$MSVC/Windows Kits/10/Lib/10.0.15063.0/um/x64/"
+}
+
+{
+    # But first, Linux!
+    cargo build --all
+    cargo run
+    # Well, that was easy.
+}
+
+
+
+TARGET=x86_64-pc-windows-msvc
+# Note: windows-gnu is a ticking timebomb, and should not be used on programs that may reach much complexity.
+# The GNU linker lacks /hugeobj support. Rust programs can generate a stupidly large number of symbols, which
+# can end up overflowing the maximum capacity of the only format the linker supports.
+
+rustup target add $TARGET
+
+
+
+uncap() {
+    # Fix up the case...
+    IFS="$(echo)" # FIXME: Probs should be just ""
+    find "$1" | grep '\.Lib$' | while read -r f; do
+        #echo ">" $f
+        cd "$(dirname "$f")"
+        f=$(basename "$f")
+        g=$(echo "$f" | tr '[:upper:]' '[:lower:]')
+        mv -v "$f" "$g"
+    done
+}
+
+add_lib_path() {
+    #echo "add_lib_path: $1"
+    test -e "$1" || {
+        echo "$1 does not exist."
+        false
+    }
+    uncap "$1"
+    export LIB="${LIB};$1"
+}
+
+export LIB=""
+each_lib
+export LIB="${LIB:1}"
+
+cargo build       --target $TARGET
+cargo build --all --target $TARGET
+
+
+
+unset LD_PRELOAD
+wine target/$TARGET/debug/xp_bin.exe

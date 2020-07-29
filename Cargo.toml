@@ -1,0 +1,28 @@
+# http://doc.crates.io/manifest.html
+[package]
+name = "xp_crate"
+version = "0.1.0"
+authors = ["neptunepink <purpleposeidon@gmail.com>"]
+publish = false
+#edition = "2018"
+
+[workspace]
+members = ["src/template/"]
+
+[lib]
+#crate-type = ["dylib"]
+#crate-type = ["rlib", "dylib", "cdylib"]
+crate-type = ["rlib", "cdylib"]
+name = "xp_lib"
+
+#[profile.dev]
+#lto = true
+
+[[bin]]
+name = "xp_bin"
+path = "src/bin/xp_bin.rs"
+doc = false
+
+
+[dependencies]
+libloading = "0.4.*"
