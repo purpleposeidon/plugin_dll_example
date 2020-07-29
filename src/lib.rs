@@ -1,4 +1,6 @@
 extern crate libloading;
+pub extern crate serde;
+pub extern crate serde_json;
 
 
 // Problem Number One
@@ -13,7 +15,7 @@ pub mod shit_ton;
 
 // Problem Number Two
 // Compiling with lldb.exe seemed incapable of handling monomorphized types.
-#[derive(Debug)]
+#[derive(Debug, serde::Serialize)]
 pub struct AToughNut<T>(pub T);
 
 #[cfg(not(windows))]
