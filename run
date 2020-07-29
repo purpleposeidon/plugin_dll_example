@@ -1,8 +1,16 @@
 #!/bin/bash
 
+# This is all in debt to https://stackoverflow.com/a/54465158
+# Other resources...
+# - https://zork.net/%7Est/jottings/rust-windows-and-debian.html
+# - https://forge.rust-lang.org/compiler/cross-compilation/windows.html
+
 unset RUSTC_WRAPPER
 set -e
 
+# You can download this almost-directly from
+#     https://docs.microsoft.com/en-us/legal/windows/hardware/enterprise-wdk-license-2015
+# (It's rather bloated for our purposes tho... Running rustup on windows might get this stuff also?)
 MSVC="/media/media/source/msvc/Program Files"
 each_lib() {
     add_lib_path "$MSVC/Microsoft Visual Studio 14.0/VC/lib/amd64"
@@ -11,28 +19,26 @@ each_lib() {
 }
 
 {
-    # But first, Linux!
+    # But first, let's check Linux!
     cargo build --all
     cargo run
-    # Well, that was easy.
 }
 
 
 
-TARGET=x86_64-pc-windows-msvc
-# Note: windows-gnu is a ticking timebomb, and should not be used on programs that may reach much complexity.
+# Note: windows-gnu is a ticking timebomb, and should not be used if your program could become complex.
 # The GNU linker lacks /hugeobj support. Rust programs can generate a stupidly large number of symbols, which
-# can end up overflowing the maximum capacity of the only format the linker supports.
+# can end up overflowing the maximum capacity of the only format the MINGW linker supports.
+TARGET=x86_64-pc-windows-msvc
 
 rustup target add $TARGET
 
 
 
-uncap() {
+fix_capitalization() {
     # Fix up the case...
     IFS="$(echo)" # FIXME: Probs should be just ""
     find "$1" | grep '\.Lib$' | while read -r f; do
-        #echo ">" $f
         cd "$(dirname "$f")"
         f=$(basename "$f")
         g=$(echo "$f" | tr '[:upper:]' '[:lower:]')
@@ -46,7 +52,7 @@ add_lib_path() {
         echo "$1 does not exist."
         false
     }
-    uncap "$1"
+    fix_capitalization "$1"
     export LIB="${LIB};$1"
 }
 
@@ -59,5 +65,5 @@ cargo build --all --target $TARGET
 
 
 
-unset LD_PRELOAD
+unset LD_PRELOAD # just for my own nonsense; you probably don't need this
 wine target/$TARGET/debug/xp_bin.exe
