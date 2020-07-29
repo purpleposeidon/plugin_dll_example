@@ -1,17 +1,2 @@
 [target.x86_64-pc-windows-msvc]
-#linker = "./link.exe"
-#linker = "lldb"
-#rustflags = [
-#    "-C", "link-arg=-fuse-ld=lld",
-#]
-
-#linker = "clang"
-
-
-# https://stackoverflow.com/a/54465158 <-- this guy! Yeah!
-# $ sudo apt install lld
-
 linker = "lld"
-#rustflags = [
-#    "-C", "link-arg=/BIGOBJ"
-#]
